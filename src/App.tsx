@@ -3,12 +3,15 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { HeroMock } from "./components/HeroMock";
 import {
   CountUp,
+  IconCheck,
   IconGithub,
   IconGrid,
   IconStar,
   Reveal,
   useGithubStats,
+  useOS,
 } from "./lib/bits";
+import { useI18n, LangToggle } from "./lib/i18n";
 import {
   C,
   CLONE_CMD,
@@ -45,7 +48,10 @@ export default function App() {
 }
 
 // ---- buttons ----------------------------------------------------------------
-function DownloadBtn({ label = "DESCARGAR GRATIS", big = false }: { label?: string; big?: boolean }) {
+function DownloadBtn({ big = false }: { big?: boolean }) {
+  const { t } = useI18n();
+  const os = useOS();
+  const label = os === "windows" ? t.hero.downloadWin : t.hero.downloadFree;
   return (
     <motion.a
       href={DOWNLOAD_URL}
@@ -70,7 +76,8 @@ function DownloadBtn({ label = "DESCARGAR GRATIS", big = false }: { label?: stri
   );
 }
 
-function GithubBtn({ big = false }: { big?: boolean }) {
+function GithubBtn() {
+  const { t } = useI18n();
   return (
     <motion.a
       href={REPO_URL}
@@ -82,23 +89,24 @@ function GithubBtn({ big = false }: { big?: boolean }) {
         display: "flex",
         alignItems: "center",
         gap: 9,
-        padding: big ? "16px 26px" : "15px 24px",
+        padding: "15px 24px",
         border: `2px solid ${C.rule2}`,
         color: C.paper,
         fontFamily: mono,
-        fontSize: big ? 14 : 13.5,
+        fontSize: 13.5,
         fontWeight: 600,
         letterSpacing: "0.04em",
       }}
     >
       <IconGithub fill={C.paper} />
-      VER EN GITHUB
+      {t.hero.github}
     </motion.a>
   );
 }
 
 // ---- nav --------------------------------------------------------------------
 function Nav() {
+  const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const stats = useGithubStats();
   useEffect(() => {
@@ -133,10 +141,13 @@ function Nav() {
           <Mark size={26} font={18} />
           <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.03em" }}>microset</span>
         </a>
-        <div className="ms-nav-links" style={{ display: "flex", alignItems: "center", gap: 26 }}>
-          <NavLink href="#how">CÓMO FUNCIONA</NavLink>
-          <NavLink href="#oss">OPEN SOURCE</NavLink>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <div className="ms-nav-secondary" style={{ display: "flex", alignItems: "center", gap: 26 }}>
+            <NavLink href="#how">{t.nav.how}</NavLink>
+            <NavLink href="#oss">{t.nav.oss}</NavLink>
+          </div>
           <motion.a
+            className="ms-nav-star"
             href={REPO_URL}
             target="_blank"
             rel="noreferrer"
@@ -154,8 +165,9 @@ function Nav() {
             }}
           >
             <IconStar fill={C.acc} />
-            {stats ? formatK(stats.stars) : "★"}
+            {stats && stats.stars > 0 ? formatK(stats.stars) : "GitHub"}
           </motion.a>
+          <LangToggle />
           <motion.a
             href={DOWNLOAD_URL}
             whileHover={{ y: -1 }}
@@ -170,7 +182,7 @@ function Nav() {
               letterSpacing: "0.06em",
             }}
           >
-            DESCARGAR
+            {t.nav.download}
           </motion.a>
         </div>
       </div>
@@ -213,6 +225,7 @@ function Mark({ size, font }: { size: number; font: number }) {
 
 // ---- hero -------------------------------------------------------------------
 function Hero() {
+  const { t } = useI18n();
   return (
     <div
       id="top"
@@ -248,7 +261,7 @@ function Hero() {
               <span
                 style={{ fontFamily: mono, fontSize: 11.5, letterSpacing: "0.16em", color: C.acc }}
               >
-                EJERCICIO EN CASA · CONTRA EL SEDENTARISMO
+                {t.hero.badge}
               </span>
             </div>
           </Reveal>
@@ -263,9 +276,13 @@ function Hero() {
                 textTransform: "uppercase",
               }}
             >
-              Entrená en
+              {t.hero.titleL1}
               <br />
-              las <span style={{ background: C.acc, color: C.ink, padding: "0 14px" }}>pausas</span>.
+              {t.hero.titleL2}{" "}
+              <span style={{ background: C.acc, color: C.ink, padding: "0 14px" }}>
+                {t.hero.titleHi}
+              </span>
+              .
             </h1>
           </Reveal>
           <Reveal delay={0.12}>
@@ -278,9 +295,7 @@ function Hero() {
                 color: C.text,
               }}
             >
-              microset te saca de la silla con micro-pausas de ejercicio repartidas en tu jornada de
-              home office. Combatí el sedentarismo sin pensarlo: te avisa, te movés un minuto,
-              seguís. <span style={{ color: C.acc }}>Open source, nativo, sin nube.</span>
+              {t.hero.lead} <span style={{ color: C.acc }}>{t.hero.leadAccent}</span>
             </p>
           </Reveal>
           <Reveal delay={0.18}>
@@ -288,6 +303,19 @@ function Hero() {
               <DownloadBtn />
               <GithubBtn />
             </div>
+            <p
+              style={{
+                margin: "14px 0 0",
+                fontFamily: mono,
+                fontSize: 11,
+                lineHeight: 1.5,
+                letterSpacing: "0.02em",
+                color: C.faint,
+                maxWidth: 470,
+              }}
+            >
+              {t.hero.smartscreen}
+            </p>
           </Reveal>
           <Reveal delay={0.24}>
             <div
@@ -295,7 +323,7 @@ function Hero() {
                 display: "flex",
                 alignItems: "center",
                 gap: 18,
-                marginTop: 30,
+                marginTop: 26,
                 fontFamily: mono,
                 fontSize: 11,
                 letterSpacing: "0.06em",
@@ -303,13 +331,12 @@ function Hero() {
                 flexWrap: "wrap",
               }}
             >
-              <span>WINDOWS 11</span>
-              <Dot />
-              <span>LINUX</span>
-              <Dot />
-              <span>TAURI · RUST</span>
-              <Dot />
-              <span>MIT</span>
+              {t.platform.map((p, i) => (
+                <span key={p} style={{ display: "flex", alignItems: "center", gap: 18 }}>
+                  {i > 0 && <Dot />}
+                  {p}
+                </span>
+              ))}
             </div>
           </Reveal>
         </div>
@@ -342,19 +369,11 @@ function Grain() {
 }
 
 // ---- ticker -----------------------------------------------------------------
-const PHRASES = [
-  "MICRO-PAUSAS DE MOVIMIENTO",
-  "8 PAUSAS AL DÍA",
-  "CONTRA EL SEDENTARISMO",
-  "EJERCICIO DESDE CASA",
-  "OPEN SOURCE · MIT",
-  "NATIVO · SIN NUBE",
-];
-
 function Ticker() {
+  const { t } = useI18n();
   const run = (
     <div style={{ display: "flex", alignItems: "center", whiteSpace: "nowrap", width: "50%" }}>
-      {PHRASES.map((p, i) => (
+      {t.ticker.map((p, i) => (
         <span key={i} style={{ display: "flex", alignItems: "center" }}>
           <span
             style={{
@@ -393,20 +412,14 @@ function Ticker() {
 }
 
 // ---- how it works -----------------------------------------------------------
-const STEPS = [
-  { n: "01", t: "Decí qué tenés", d: "Barra, paraletas, bandas. Solo ejercicios que podés hacer en casa." },
-  { n: "02", t: "Armá tu rutina", d: "Elegí qué hacer por tipo de día. El método y la intensidad, los ponés vos." },
-  { n: "03", t: "Se reparte solo", d: "Distribuye las series en tu horario, respetando almuerzo y descansos." },
-  { n: "04", t: "Te avisa y se adapta", d: "Llega el aviso. Hacés, posponés o decís ahora no y reacomoda." },
-];
-
 function How() {
+  const { t } = useI18n();
   return (
     <div id="how" style={{ borderBottom: `1px solid ${C.rule}` }}>
       <div style={{ ...wrap, padding: "80px 36px" }}>
         <Reveal>
           <div style={{ marginBottom: 48 }}>
-            <div style={monoLabel}>CÓMO FUNCIONA</div>
+            <div style={monoLabel}>{t.how.label}</div>
             <h2
               style={{
                 margin: "14px 0 0",
@@ -417,9 +430,9 @@ function How() {
                 textTransform: "uppercase",
               }}
             >
-              Configurás una vez.
+              {t.how.titleL1}
               <br />
-              Te movés todo el día.
+              {t.how.titleL2}
             </h2>
           </div>
         </Reveal>
@@ -432,7 +445,7 @@ function How() {
             borderLeft: `1px solid ${C.rule2}`,
           }}
         >
-          {STEPS.map((s, i) => (
+          {t.how.steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 0.08}>
               <motion.div
                 whileHover={{ backgroundColor: "rgba(196,248,42,0.04)" }}
@@ -471,6 +484,7 @@ function How() {
 
 // ---- method -----------------------------------------------------------------
 function Method() {
+  const { t } = useI18n();
   return (
     <div style={{ borderBottom: `1px solid ${C.rule}`, background: C.panel2 }}>
       <div
@@ -478,7 +492,7 @@ function Method() {
         style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 60 }}
       >
         <Reveal style={{ flex: 1 }}>
-          <div style={monoLabel}>CÓMO SE REPARTE</div>
+          <div style={monoLabel}>{t.method.label}</div>
           <h2
             style={{
               margin: "16px 0 0",
@@ -489,31 +503,29 @@ function Method() {
               textTransform: "uppercase",
             }}
           >
-            Tu rutina,
+            {t.method.titleL1}
             <br />
-            repartida
+            {t.method.titleL2}
             <br />
-            en el día.
+            {t.method.titleL3}
           </h2>
           <p style={{ margin: "22px 0 0", maxWidth: 430, fontSize: 15, lineHeight: 1.65, color: C.dim }}>
-            microset toma tu rutina y la distribuye en pausas cortas a lo largo de tu jornada,
-            respetando tu horario. El método y la intensidad los elegís vos; si te salteás una,
-            reacomoda el resto del día.
+            {t.method.body}
           </p>
         </Reveal>
         <Reveal delay={0.12} style={{ flex: "none" }}>
           <div style={{ display: "flex", border: `1px solid ${C.rule2}` }}>
             <Stat>
               <CountUp to={8} suffix="×" style={statNum(C.acc)} />
-              <StatLabel>PAUSAS / DÍA</StatLabel>
+              <StatLabel>{t.method.stats[0]}</StatLabel>
             </Stat>
             <Stat>
               <span style={statNum(C.paper)}>~1'</span>
-              <StatLabel>POR PAUSA</StatLabel>
+              <StatLabel>{t.method.stats[1]}</StatLabel>
             </Stat>
             <Stat last>
               <span style={statNum(C.paper)}>0</span>
-              <StatLabel>EXCUSAS</StatLabel>
+              <StatLabel>{t.method.stats[2]}</StatLabel>
             </Stat>
           </div>
         </Reveal>
@@ -554,11 +566,13 @@ function StatLabel({ children }: { children: ReactNode }) {
 
 // ---- features (bento) -------------------------------------------------------
 function Features() {
+  const { t } = useI18n();
+  const f = t.features;
   return (
     <div style={{ borderBottom: `1px solid ${C.rule}` }}>
       <div style={{ ...wrap, padding: "80px 36px" }}>
         <Reveal>
-          <div style={monoLabel}>TODO INCLUIDO</div>
+          <div style={monoLabel}>{f.label}</div>
           <h2
             style={{
               margin: "14px 0 44px",
@@ -569,7 +583,7 @@ function Features() {
               textTransform: "uppercase",
             }}
           >
-            Una herramienta, no una app más.
+            {f.title}
           </h2>
         </Reveal>
         <div
@@ -581,36 +595,36 @@ function Features() {
           }}
         >
           <Cell delay={0}>
-            <FLabel>SIEMPRE ENCIMA</FLabel>
-            <FTitle>Panel flotante</FTitle>
-            <FDesc>Un widget chiquito, always-on-top, con tu próxima serie y la cuenta regresiva.</FDesc>
+            <FLabel>{f.panel.l}</FLabel>
+            <FTitle>{f.panel.t}</FTitle>
+            <FDesc>{f.panel.d}</FDesc>
             <MiniPanel />
           </Cell>
           <Cell delay={0.06}>
-            <FLabel>PROGRESÁ</FLabel>
-            <FTitle>Niveles</FTitle>
-            <FDesc>De asistido con banda a lastrado.</FDesc>
+            <FLabel>{f.levels.l}</FLabel>
+            <FTitle>{f.levels.t}</FTitle>
+            <FDesc>{f.levels.d}</FDesc>
             <MiniLadder />
           </Cell>
           <Cell delay={0.12}>
-            <FLabel>CONTRA EL SEDENTARISMO</FLabel>
-            <FTitle>Salí de la silla</FTitle>
-            <FDesc>Cortás las horas sentado con pausas cortas repartidas en tu jornada.</FDesc>
+            <FLabel>{f.sed.l}</FLabel>
+            <FTitle>{f.sed.t}</FTitle>
+            <FDesc>{f.sed.d}</FDesc>
             <MiniSed />
           </Cell>
           <Cell delay={0.18}>
-            <FLabel>AVISOS</FLabel>
-            <FTitle>Que respetan</FTitle>
-            <FDesc>Notificaciones nativas, submáximas, sin culpa. Posponé o saltá.</FDesc>
+            <FLabel>{f.notif.l}</FLabel>
+            <FTitle>{f.notif.t}</FTitle>
+            <FDesc>{f.notif.d}</FDesc>
           </Cell>
           <Cell
             delay={0.24}
             style={{ gridColumn: "span 2", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
           >
             <div>
-              <FLabel>CON LO QUE TENÉS</FLabel>
-              <FTitle>Tu equipo, tus ejercicios</FTitle>
-              <FDesc>Decís qué tenés en casa y microset arma la rutina con eso. Nada de membresías.</FDesc>
+              <FLabel>{f.gear.l}</FLabel>
+              <FTitle>{f.gear.t}</FTitle>
+              <FDesc>{f.gear.d}</FDesc>
             </div>
             <div style={{ flex: "none", marginLeft: 24, width: 230 }}>
               <MiniChips />
@@ -675,23 +689,24 @@ const FDesc = ({ children }: { children: ReactNode }) => (
 );
 
 function MiniPanel() {
+  const { t } = useI18n();
   return (
     <div style={{ marginTop: 20, width: "100%", border: `1px solid ${C.rule2}`, background: "#0c0c0c", padding: "11px 13px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 800, textTransform: "uppercase" }}>FONDOS</div>
-          <div style={{ fontFamily: mono, fontSize: 9, color: C.faint, marginTop: 2 }}>5 · PESO CORPORAL</div>
+          <div style={{ fontSize: 15, fontWeight: 800, textTransform: "uppercase" }}>{t.mock.ex}</div>
+          <div style={{ fontFamily: mono, fontSize: 9.5, color: C.faint, marginTop: 2 }}>{t.features.miniMeta}</div>
         </div>
         <div style={{ fontFamily: mono, fontSize: 15, fontWeight: 600, color: C.ink, background: C.acc, padding: "3px 7px" }}>
-          AHORA
+          {t.features.miniNow}
         </div>
       </div>
       <div style={{ display: "flex", gap: 6, marginTop: 11 }}>
-        <div style={{ flex: 1, textAlign: "center", padding: 7, background: C.acc, color: C.ink, fontFamily: mono, fontSize: 10, fontWeight: 600 }}>
-          ✓ HECHO
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: 7, background: C.acc, color: C.ink, fontFamily: mono, fontSize: 10, fontWeight: 600 }}>
+          <IconCheck size={11} /> {t.features.miniDone}
         </div>
         <div style={{ padding: "7px 12px", border: `1px solid ${C.rule2}`, color: C.dim, fontFamily: mono, fontSize: 10 }}>
-          NO
+          {t.features.miniNo}
         </div>
       </div>
     </div>
@@ -699,10 +714,10 @@ function MiniPanel() {
 }
 
 function MiniLadder() {
-  const levels = ["BANDA", "P.CORP", "PESO", "LASTRE"];
+  const { t } = useI18n();
   return (
     <div style={{ display: "flex", gap: 4, marginTop: 22 }}>
-      {levels.map((lv, i) => (
+      {t.features.ladder.map((lv, i) => (
         <div key={lv} style={{ flex: 1 }}>
           <motion.div
             initial={{ scaleY: 0 }}
@@ -715,7 +730,7 @@ function MiniLadder() {
               background: i < 1 ? "rgba(196,248,42,0.3)" : i === 1 ? C.acc : C.bar0,
             }}
           />
-          <div style={{ fontFamily: mono, fontSize: 8, color: i === 1 ? C.acc : C.faint2, marginTop: 7, textAlign: "center" }}>
+          <div style={{ fontFamily: mono, fontSize: 9, color: i === 1 ? C.acc : C.faint2, marginTop: 7, textAlign: "center" }}>
             {lv}
           </div>
         </div>
@@ -743,11 +758,12 @@ function MiniSed() {
 }
 
 function MiniChips() {
+  const { t } = useI18n();
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-      {["BARRA", "PARALETAS", "BANDAS", "ANILLAS"].map((t, i) => (
+      {t.features.chips.map((c, i) => (
         <motion.span
-          key={t}
+          key={c}
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -761,7 +777,7 @@ function MiniChips() {
             padding: "6px 10px",
           }}
         >
-          {t}
+          {c}
         </motion.span>
       ))}
     </div>
@@ -770,8 +786,10 @@ function MiniChips() {
 
 // ---- open source ------------------------------------------------------------
 function OpenSource() {
+  const { t } = useI18n();
   const stats = useGithubStats();
   const [copied, setCopied] = useState(false);
+  const hasTraction = !!stats && stats.stars > 0;
   const copy = () => {
     navigator.clipboard?.writeText(CLONE_CMD).then(
       () => {
@@ -789,7 +807,7 @@ function OpenSource() {
         style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 56 }}
       >
         <Reveal style={{ flex: 1 }}>
-          <div style={monoLabel}>CÓDIGO ABIERTO</div>
+          <div style={monoLabel}>{t.oss.label}</div>
           <h2
             style={{
               margin: "16px 0 0",
@@ -800,21 +818,33 @@ function OpenSource() {
               textTransform: "uppercase",
             }}
           >
-            Abierto
+            {t.oss.titleL1}
             <br />
-            de par
+            {t.oss.titleL2}
             <br />
-            en par.
+            {t.oss.titleL3}
           </h2>
           <p style={{ margin: "22px 0 0", maxWidth: 420, fontSize: 15, lineHeight: 1.65, color: C.dim }}>
-            Sin telemetría, sin cuenta, sin nube. El código vive en GitHub bajo licencia{" "}
-            <span style={{ color: C.paper }}>MIT</span> — auditalo, forkealo, hacelo tuyo. Construido
-            con <span style={{ color: C.paper }}>Tauri + Rust</span>: liviano, nativo y rápido.
+            {t.oss.bodyPre}
+            <span style={{ color: C.paper }}>{t.oss.bodyMit}</span>
+            {t.oss.bodyMid}
+            <span style={{ color: C.paper }}>{t.oss.bodyTauri}</span>
+            {t.oss.bodyEnd}
           </p>
           <div style={{ display: "flex", gap: 24, marginTop: 30 }}>
-            <OssStat value={stats ? formatK(stats.stars) : "—"} label="STARS" />
-            <OssStat value={stats ? formatK(stats.forks) : "—"} label="FORKS" />
-            <OssStat value={INSTALLER_SIZE} label="INSTALADOR" />
+            {hasTraction ? (
+              <>
+                <OssStat value={formatK(stats!.stars)} label={t.oss.statStars} />
+                <OssStat value={formatK(stats!.forks)} label={t.oss.statForks} />
+                <OssStat value={INSTALLER_SIZE} label={t.oss.statInstaller} />
+              </>
+            ) : (
+              <>
+                <OssStat value={INSTALLER_SIZE} label={t.oss.statInstaller} />
+                <OssStat value="MIT" label={t.oss.statLicense} />
+                <OssStat value="0" label={t.oss.statTelemetry} />
+              </>
+            )}
           </div>
         </Reveal>
 
@@ -845,13 +875,11 @@ function OpenSource() {
                   padding: "3px 7px",
                 }}
               >
-                PUBLIC
+                {t.oss.public}
               </span>
             </div>
             <div style={{ padding: "16px 18px" }}>
-              <div style={{ fontSize: 13, lineHeight: 1.5, color: C.dim }}>
-                Coach de pausas activas para home office. Movimiento repartido, automático.
-              </div>
+              <div style={{ fontSize: 13, lineHeight: 1.5, color: C.dim }}>{t.oss.cardDesc}</div>
               <div
                 style={{
                   display: "flex",
@@ -869,9 +897,9 @@ function OpenSource() {
                 </span>
                 <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
                   <IconStar size={12} fill={C.faint} />
-                  {stats ? formatK(stats.stars) : "—"}
+                  {hasTraction ? formatK(stats!.stars) : "—"}
                 </span>
-                <span>⑂ {stats ? formatK(stats.forks) : "—"}</span>
+                <span>⑂ {hasTraction ? formatK(stats!.forks) : "—"}</span>
                 <span>MIT</span>
               </div>
             </div>
@@ -894,7 +922,7 @@ function OpenSource() {
                 <span style={{ color: C.acc }}>$</span> {CLONE_CMD}
               </span>
               <span style={{ fontFamily: mono, fontSize: 9.5, color: copied ? C.acc : C.faint2, letterSpacing: "0.08em" }}>
-                {copied ? "COPIADO" : "COPIAR"}
+                {copied ? t.oss.copied : t.oss.copy}
               </span>
             </button>
           </div>
@@ -920,7 +948,7 @@ function OpenSource() {
             }}
           >
             <IconStar size={15} fill={C.ink} />
-            STAR EN GITHUB
+            {t.oss.star}
           </motion.a>
         </Reveal>
       </div>
@@ -941,6 +969,7 @@ function OssStat({ value, label }: { value: string; label: string }) {
 
 // ---- brand (lime invert) ----------------------------------------------------
 function Brand() {
+  const { t } = useI18n();
   return (
     <div style={{ background: C.acc, borderBottom: `1px solid ${C.rule}` }}>
       <div
@@ -979,11 +1008,12 @@ function Brand() {
             opacity: 0.7,
           }}
         >
-          OPEN SOURCE
-          <br />
-          MIT · TAURI · RUST
-          <br />
-          WINDOWS · LINUX
+          {t.brand.map((l) => (
+            <span key={l}>
+              {l}
+              <br />
+            </span>
+          ))}
         </div>
       </div>
     </div>
@@ -992,6 +1022,7 @@ function Brand() {
 
 // ---- final CTA --------------------------------------------------------------
 function FinalCTA() {
+  const { t } = useI18n();
   return (
     <div style={{ position: "relative", borderBottom: `1px solid ${C.rule}`, overflow: "hidden" }}>
       <div
@@ -1021,12 +1052,12 @@ function FinalCTA() {
               textTransform: "uppercase",
             }}
           >
-            Tu próxima serie
+            {t.cta.titleL1}
             <br />
-            es en un rato.
+            {t.cta.titleL2}
           </h2>
           <p style={{ margin: "22px auto 0", maxWidth: 420, fontSize: 16, lineHeight: 1.6, color: C.dim }}>
-            Instalá microset y dejá que tu día te empuje a moverte.
+            {t.cta.body}
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginTop: 34, flexWrap: "wrap" }}>
             <DownloadBtn big />
@@ -1046,7 +1077,7 @@ function FinalCTA() {
                 letterSpacing: "0.04em",
               }}
             >
-              VER RELEASES →
+              {t.cta.releases}
             </motion.a>
           </div>
         </Reveal>
@@ -1057,6 +1088,7 @@ function FinalCTA() {
 
 // ---- footer -----------------------------------------------------------------
 function Footer() {
+  const { t } = useI18n();
   return (
     <div
       style={{
@@ -1075,19 +1107,19 @@ function Footer() {
           <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.03em" }}>microset</span>
         </div>
         <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.06em", color: C.faint2, marginTop: 14 }}>
-          © 2026 · MIT · HECHO PARA MOVERSE
+          {t.footer.copyright}
         </div>
       </div>
       <div style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
-        <FootCol title="PRODUCTO">
-          <FootLink href={DOWNLOAD_URL}>Descargar</FootLink>
-          <FootLink href="#how">Cómo funciona</FootLink>
-          <FootLink href={`${REPO_URL}/releases`}>Changelog</FootLink>
+        <FootCol title={t.footer.product}>
+          <FootLink href={DOWNLOAD_URL}>{t.footer.download}</FootLink>
+          <FootLink href="#how">{t.footer.how}</FootLink>
+          <FootLink href={`${REPO_URL}/releases`}>{t.footer.changelog}</FootLink>
         </FootCol>
-        <FootCol title="OPEN SOURCE">
-          <FootLink href={REPO_URL}>GitHub</FootLink>
-          <FootLink href={`${REPO_URL}/blob/main/LICENSE`}>Licencia MIT</FootLink>
-          <FootLink href={`${REPO_URL}/blob/main/CONTRIBUTING.md`}>Contribuir</FootLink>
+        <FootCol title={t.footer.ossCol}>
+          <FootLink href={REPO_URL}>{t.footer.github}</FootLink>
+          <FootLink href={`${REPO_URL}/blob/main/LICENSE`}>{t.footer.license}</FootLink>
+          <FootLink href={`${REPO_URL}/blob/main/CONTRIBUTING.md`}>{t.footer.contribute}</FootLink>
         </FootCol>
       </div>
     </div>

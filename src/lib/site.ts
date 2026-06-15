@@ -6,9 +6,9 @@ export const C = {
   ink: "#0a0a0a", // near-black ink / page bg
   paper: "#ededea", // off-white text
   text: "#cfcfca", // body text
-  dim: "#a9a9a3", // muted text
-  faint: "#76766f", // captions
-  faint2: "#54544f", // faintest
+  dim: "#b4b4ad", // muted text (lightened for AA contrast)
+  faint: "#8f8f86", // captions (lightened for AA contrast)
+  faint2: "#6e6e66", // faintest decorative / least-important text
   rule: "#1f1f1c", // section hairlines
   rule2: "#2a2a27", // component borders
   panel2: "#0d0d0c", // alternating section bg

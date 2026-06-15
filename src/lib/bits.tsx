@@ -106,8 +106,30 @@ export function useGithubStats() {
   return stats;
 }
 
+/** Best-effort client OS detection (for tailoring the download CTA). */
+export type OS = "windows" | "mac" | "linux" | "other";
+export function detectOS(): OS {
+  if (typeof navigator === "undefined") return "other";
+  const ua = (navigator.userAgent + " " + ((navigator as { platform?: string }).platform ?? "")).toLowerCase();
+  if (ua.includes("win")) return "windows";
+  if (ua.includes("mac")) return "mac";
+  if (ua.includes("linux") || ua.includes("x11") || ua.includes("android")) return "linux";
+  return "other";
+}
+export function useOS(): OS {
+  const [os, setOS] = useState<OS>("other");
+  useEffect(() => setOS(detectOS()), []);
+  return os;
+}
+
 // ---- icons (from the design) -------------------------------------------------
 type IP = { size?: number; fill?: string };
+
+export const IconCheck = ({ size = 13, fill = "none" }: IP) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth={3} strokeLinecap="square" strokeLinejoin="miter">
+    <path d="M4 12.5l5 5L20 6.5" />
+  </svg>
+);
 
 export const IconGithub = ({ size = 16, fill = "currentColor" }: IP) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>

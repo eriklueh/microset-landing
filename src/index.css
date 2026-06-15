@@ -105,8 +105,17 @@ a {
   .ms-features > *:last-child {
     grid-column: span 2 !important;
   }
-  .ms-nav-links {
-    gap: 14px !important;
+}
+
+/* Nav collapses progressively so it never overflows on phones. */
+@media (max-width: 760px) {
+  .ms-nav-secondary {
+    display: none !important;
+  }
+}
+@media (max-width: 520px) {
+  .ms-nav-star {
+    display: none !important;
   }
 }
 

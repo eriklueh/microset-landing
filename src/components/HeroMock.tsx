@@ -1,15 +1,18 @@
-/** The "Hoy" app screenshot mock shown in the hero, ported from the design. */
+/** The "Hoy"/"Today" app screenshot mock shown in the hero, ported from the design. */
 import { motion, useReducedMotion } from "framer-motion";
+import { IconCheck } from "../lib/bits";
+import { useI18n } from "../lib/i18n";
 import { C, mono } from "../lib/site";
 
 const ROWS = [
-  { idx: "01", t: "09:00", n: "Dominadas", st: "done" },
-  { idx: "02", t: "10:07", n: "Fondos", st: "done" },
-  { idx: "05", t: "14:00", n: "Fondos", st: "now" },
-  { idx: "06", t: "15:07", n: "L-sit", st: "todo" },
+  { idx: "01", t: "09:00", st: "done" },
+  { idx: "02", t: "10:07", st: "done" },
+  { idx: "05", t: "14:00", st: "now" },
+  { idx: "06", t: "15:07", st: "todo" },
 ] as const;
 
 export function HeroMock() {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   return (
     <motion.div
@@ -55,7 +58,7 @@ export function HeroMock() {
                 textTransform: "uppercase",
               }}
             >
-              Hoy
+              {t.mock.hoy}
             </div>
             <div
               style={{
@@ -90,7 +93,7 @@ export function HeroMock() {
               <div
                 style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.16em", fontWeight: 600 }}
               >
-                AHORA — 14:00
+                {t.mock.now}
               </div>
               <div
                 style={{
@@ -101,7 +104,7 @@ export function HeroMock() {
                   marginTop: 5,
                 }}
               >
-                FONDOS
+                {t.mock.ex}
               </div>
               <div
                 style={{
@@ -112,7 +115,7 @@ export function HeroMock() {
                   opacity: 0.72,
                 }}
               >
-                5 REPS · PESO CORPORAL
+                {t.mock.meta}
               </div>
             </div>
             <div
@@ -130,7 +133,7 @@ export function HeroMock() {
                 flex: "none",
               }}
             >
-              ✓ HECHO
+              <IconCheck size={12} /> {t.mock.done}
             </div>
           </div>
 
@@ -144,13 +147,13 @@ export function HeroMock() {
               margin: "22px 0 4px",
             }}
           >
-            EL DÍA — 8 SERIES
+            {t.mock.day}
           </div>
           <div>
-            {ROWS.map((r) => {
+            {ROWS.map((r, i) => {
               const on = r.st === "now";
               const done = r.st === "done";
-              const status = done ? "HECHO" : on ? "AHORA" : "PENDIENTE";
+              const status = done ? t.mock.stDone : on ? t.mock.stNow : t.mock.stTodo;
               return (
                 <div
                   key={r.idx}
@@ -201,7 +204,7 @@ export function HeroMock() {
                       color: done ? C.faint2 : on ? C.paper : C.text,
                     }}
                   >
-                    {r.n}
+                    {t.mock.rows[i]}
                   </span>
                   <span
                     style={{
