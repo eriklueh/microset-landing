@@ -7,7 +7,61 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { REPO_URL } from "./site";
+import { C, mono, REPO_URL } from "./site";
+
+// ---- Marathon HUD chrome -----------------------------------------------------
+/** Lime corner brackets framing a card/mock. */
+export function Corners({ color = C.acc, size = 10, inset = 6 }: { color?: string; size?: number; inset?: number }) {
+  const base: CSSProperties = { position: "absolute", width: size, height: size, pointerEvents: "none" };
+  const b = `1.5px solid ${color}`;
+  return (
+    <>
+      <span style={{ ...base, top: inset, left: inset, borderTop: b, borderLeft: b }} />
+      <span style={{ ...base, top: inset, right: inset, borderTop: b, borderRight: b }} />
+      <span style={{ ...base, bottom: inset, left: inset, borderBottom: b, borderLeft: b }} />
+      <span style={{ ...base, bottom: inset, right: inset, borderBottom: b, borderRight: b }} />
+    </>
+  );
+}
+
+const GRID_WORDS = ["SYS", "OK", "PAUSA", "RELAY", "HO-01", "MOV", "SET", "RUN", "MIT", "OSS", "0x28", "CMD", "SYNC", "IDLE", "TAU", "93"];
+/** Faint mono micro-text grid for the hero background. */
+export function BgGrid() {
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "grid",
+        gridTemplateColumns: "repeat(8,1fr)",
+        gridAutoRows: "42px",
+        padding: "92px 74px",
+        pointerEvents: "none",
+        zIndex: 1,
+        alignContent: "start",
+        overflow: "hidden",
+      }}
+    >
+      {Array.from({ length: 88 }).map((_, i) => (
+        <div key={i} style={{ fontFamily: mono, fontSize: 7, letterSpacing: "0.2em", color: C.grid }}>
+          {GRID_WORDS[i % GRID_WORDS.length]}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Decorative barcode for HUD readouts. */
+export function Barcode({ color = "#3a3a32" }: { color?: string }) {
+  return (
+    <span style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 12 }}>
+      {[2, 1, 3, 1, 2, 4, 1].map((w, i) => (
+        <span key={i} style={{ width: w, height: 12, background: color }} />
+      ))}
+    </span>
+  );
+}
 
 /** Fade + rise into view, once. The default "modern detail" applied across sections. */
 export function Reveal({

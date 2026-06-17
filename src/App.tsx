@@ -2,6 +2,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { HeroMock } from "./components/HeroMock";
 import {
+  Barcode,
+  BgGrid,
+  Corners,
   CountUp,
   IconCheck,
   IconGithub,
@@ -18,11 +21,12 @@ import {
   DOWNLOAD_URL,
   INSTALLER_SIZE,
   mono,
+  pixel,
   REPO_URL,
   RELEASES_URL,
 } from "./lib/site";
 
-const wrap: CSSProperties = { maxWidth: 1180, margin: "0 auto", padding: "0 36px" };
+const wrap: CSSProperties = { maxWidth: 1240, margin: "0 auto", padding: "0 36px" };
 const monoLabel: CSSProperties = {
   fontFamily: mono,
   fontSize: 11,
@@ -32,7 +36,8 @@ const monoLabel: CSSProperties = {
 
 export default function App() {
   return (
-    <div style={{ background: C.ink, color: C.paper, overflow: "hidden" }}>
+    <div style={{ background: C.ink, color: C.paper, overflow: "hidden", position: "relative" }}>
+      <SystemBar />
       <Nav />
       <Hero />
       <Ticker />
@@ -43,6 +48,38 @@ export default function App() {
       <Brand />
       <FinalCTA />
       <Footer />
+    </div>
+  );
+}
+
+// ---- system bar -------------------------------------------------------------
+function SystemBar() {
+  const { t } = useI18n();
+  return (
+    <div style={{ borderBottom: `1px solid ${C.grid}`, background: C.ink }}>
+      <div
+        style={{
+          ...wrap,
+          padding: "7px 36px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontFamily: mono,
+          fontSize: 9.5,
+          letterSpacing: "0.16em",
+          color: C.faint2,
+        }}
+      >
+        <span className="ms-sys-left" style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span>MICROSET // {t.marathon.systemName}</span>
+          <span className="ms-sys-extra" style={{ color: C.mark }}>v0.1.0</span>
+          <span className="ms-sys-extra" style={{ color: C.mark }}>EXEC 0x28·93</span>
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 8, color: C.acc }}>
+          <span className="ms-blink" style={{ width: 6, height: 6, background: C.acc }} />
+          {t.marathon.online}
+        </span>
+      </div>
     </div>
   );
 }
@@ -121,17 +158,17 @@ function Nav() {
       style={{
         position: "sticky",
         top: 0,
-        zIndex: 50,
+        zIndex: 80,
         borderBottom: `1px solid ${C.rule}`,
-        background: scrolled ? "rgba(10,10,10,0.72)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        transition: "background 0.3s, backdrop-filter 0.3s",
+        background: scrolled ? "rgba(0,0,0,0.9)" : "rgba(0,0,0,0.6)",
+        backdropFilter: "blur(8px)",
+        transition: "background 0.3s",
       }}
     >
       <div
         style={{
           ...wrap,
-          padding: "18px 36px",
+          padding: "14px 36px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -142,7 +179,7 @@ function Nav() {
           <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.03em" }}>microset</span>
         </a>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div className="ms-nav-secondary" style={{ display: "flex", alignItems: "center", gap: 26 }}>
+          <div className="ms-nav-secondary" style={{ display: "flex", alignItems: "center", gap: 24 }}>
             <NavLink href="#how">{t.nav.how}</NavLink>
             <NavLink href="#oss">{t.nav.oss}</NavLink>
           </div>
@@ -195,7 +232,7 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
     <motion.a
       href={href}
       whileHover={{ color: C.paper }}
-      style={{ fontFamily: mono, fontSize: 11.5, letterSpacing: "0.1em", color: C.dim }}
+      style={{ fontFamily: mono, fontSize: 11, letterSpacing: "0.1em", color: C.dim }}
     >
       {children}
     </motion.a>
@@ -229,118 +266,190 @@ function Hero() {
   return (
     <div
       id="top"
-      style={{ position: "relative", borderBottom: `1px solid ${C.rule}`, overflow: "hidden" }}
+      style={{
+        position: "relative",
+        borderBottom: `1px solid ${C.rule}`,
+        overflow: "hidden",
+        minHeight: "88vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
+      <BgGrid />
+      <span style={{ position: "absolute", top: 118, left: 64, color: C.mark, fontSize: 18, fontWeight: 300, pointerEvents: "none", zIndex: 2 }}>+</span>
+      <span style={{ position: "absolute", bottom: 148, right: 190, color: C.mark, fontSize: 18, fontWeight: 300, pointerEvents: "none", zIndex: 2 }}>+</span>
+      <RelayBar />
+
       <div
+        className="ms-hero-pad"
         style={{
-          position: "absolute",
-          top: "-20%",
-          right: "-5%",
-          width: "55%",
-          height: "140%",
-          background: "radial-gradient(circle at 60% 40%,rgba(196,248,42,0.1),transparent 60%)",
-          pointerEvents: "none",
-        }}
-      />
-      <Grain />
-      <div
-        className="ms-hero"
-        style={{
-          ...wrap,
           position: "relative",
-          padding: "72px 36px 80px",
+          zIndex: 3,
+          flex: 1,
           display: "flex",
           alignItems: "center",
-          gap: 56,
+          padding: "48px 90px 28px 36px",
         }}
       >
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <Reveal y={18}>
-            <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 28 }}>
-              <span className="ms-blink" style={{ width: 8, height: 8, background: C.acc }} />
-              <span
-                style={{ fontFamily: mono, fontSize: 11.5, letterSpacing: "0.16em", color: C.acc }}
+        <div className="ms-hero" style={{ ...wrap, width: "100%", display: "flex", alignItems: "center", gap: 48 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <Reveal y={16}>
+              <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 22 }}>
+                <span className="ms-blink" style={{ width: 8, height: 8, background: C.acc }} />
+                <span style={{ fontFamily: mono, fontSize: 11, letterSpacing: "0.16em", color: C.acc }}>
+                  {t.hero.badge}
+                </span>
+              </div>
+            </Reveal>
+            <Reveal delay={0.05}>
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: "clamp(46px, 7.5vw, 76px)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.055em",
+                  lineHeight: 0.84,
+                  textTransform: "uppercase",
+                }}
               >
-                {t.hero.badge}
-              </span>
-            </div>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: "clamp(48px, 8vw, 84px)",
-                fontWeight: 900,
-                letterSpacing: "-0.055em",
-                lineHeight: 0.88,
-                textTransform: "uppercase",
-              }}
-            >
-              {t.hero.titleL1}
-              <br />
-              {t.hero.titleL2}{" "}
-              <span style={{ background: C.acc, color: C.ink, padding: "0 14px" }}>
-                {t.hero.titleHi}
-              </span>
-              .
-            </h1>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p
-              style={{
-                margin: "30px 0 0",
-                maxWidth: 470,
-                fontSize: 16.5,
-                lineHeight: 1.6,
-                color: C.text,
-              }}
-            >
-              {t.hero.lead} <span style={{ color: C.acc }}>{t.hero.leadAccent}</span>
-            </p>
-          </Reveal>
-          <Reveal delay={0.18}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 36, flexWrap: "wrap" }}>
-              <DownloadBtn />
-              <GithubBtn />
-            </div>
-            <p
-              style={{
-                margin: "14px 0 0",
-                fontFamily: mono,
-                fontSize: 11,
-                lineHeight: 1.5,
-                letterSpacing: "0.02em",
-                color: C.faint,
-                maxWidth: 470,
-              }}
-            >
-              {t.hero.smartscreen}
-            </p>
-          </Reveal>
-          <Reveal delay={0.24}>
+                {t.hero.titleL1}
+                <br />
+                {t.hero.titleL2}{" "}
+                <span
+                  style={{
+                    fontFamily: pixel,
+                    fontWeight: 700,
+                    background: C.acc,
+                    color: C.ink,
+                    padding: "0 12px",
+                  }}
+                >
+                  {t.hero.titleHi.toUpperCase()}
+                </span>
+                .
+              </h1>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  marginTop: 20,
+                  fontFamily: mono,
+                  fontSize: 9.5,
+                  letterSpacing: "0.14em",
+                  color: C.faint2,
+                }}
+              >
+                <Barcode />
+                <span>REF · MICROSET-HO-01</span>
+                <span style={{ color: C.acc }}>{t.marathon.uptime} 0.991</span>
+              </div>
+            </Reveal>
+            <Reveal delay={0.14}>
+              <p style={{ margin: "24px 0 0", maxWidth: 480, fontSize: 16.5, lineHeight: 1.6, color: C.text }}>
+                {t.hero.lead} <span style={{ color: C.acc }}>{t.hero.leadAccent}</span>
+              </p>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 30, flexWrap: "wrap" }}>
+                <DownloadBtn />
+                <GithubBtn />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 14,
+                  marginTop: 16,
+                  fontFamily: mono,
+                  fontSize: 10.5,
+                  letterSpacing: "0.06em",
+                  color: C.faint,
+                  flexWrap: "wrap",
+                }}
+              >
+                <span style={{ color: C.acc }}>↓</span>
+                <span>{t.marathon.linuxNote}</span>
+                <Dot />
+                <span>{INSTALLER_SIZE}</span>
+                <Dot />
+                <span>{t.marathon.freeMit}</span>
+              </div>
+              <p style={{ margin: "14px 0 0", fontFamily: mono, fontSize: 11, lineHeight: 1.5, color: C.faint, maxWidth: 480 }}>
+                {t.hero.smartscreen}
+              </p>
+              <div style={{ marginTop: 24, fontFamily: mono, fontSize: 11, letterSpacing: "0.04em", color: C.faint }}>
+                {t.marathon.taglinePre}{" "}
+                <span style={{ color: C.text }}>“{t.marathon.taglineQuote}”</span>
+              </div>
+            </Reveal>
+          </div>
+
+          <div className="ms-hero-right" style={{ flex: "none" }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 18,
-                marginTop: 26,
+                justifyContent: "space-between",
+                marginBottom: 10,
                 fontFamily: mono,
-                fontSize: 11,
-                letterSpacing: "0.06em",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
                 color: C.faint2,
-                flexWrap: "wrap",
+                width: 440,
+                maxWidth: "100%",
               }}
             >
-              {t.platform.map((p, i) => (
-                <span key={p} style={{ display: "flex", alignItems: "center", gap: 18 }}>
-                  {i > 0 && <Dot />}
-                  {p}
-                </span>
-              ))}
+              <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <span className="ms-blink" style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff2d2d" }} />
+                {t.marathon.rec}
+              </span>
+              <span>SER. 0x28·93</span>
             </div>
-          </Reveal>
+            <HeroMock />
+          </div>
         </div>
-        <HeroMock />
+      </div>
+    </div>
+  );
+}
+
+function RelayBar() {
+  const { t } = useI18n();
+  return (
+    <div
+      className="ms-relay"
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        width: 34,
+        background: C.acc,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "18px 0",
+        zIndex: 6,
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+        <span style={{ width: 10, height: 10, background: C.ink }} />
+        <span style={{ fontFamily: mono, fontSize: 8, letterSpacing: "0.08em", color: C.ink, writingMode: "vertical-rl" }}>
+          SES·2026
+        </span>
+      </div>
+      <div style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: pixel, fontWeight: 700, fontSize: 16, color: C.ink, letterSpacing: "0.06em" }}>
+        {t.marathon.relay}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "5px 5px", gridAutoRows: "5px", gap: 1 }}>
+        <span style={{ background: C.ink }} />
+        <span />
+        <span />
+        <span style={{ background: C.ink }} />
       </div>
     </div>
   );
@@ -350,24 +459,6 @@ function Dot() {
   return <span style={{ width: 3, height: 3, background: C.faint2 }} />;
 }
 
-/** Animated film-grain overlay. */
-function Grain() {
-  return (
-    <div
-      className="ms-grain"
-      style={{
-        position: "absolute",
-        inset: 0,
-        opacity: 0.05,
-        mixBlendMode: "overlay",
-        pointerEvents: "none",
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-      }}
-    />
-  );
-}
-
 // ---- ticker -----------------------------------------------------------------
 function Ticker() {
   const { t } = useI18n();
@@ -375,28 +466,10 @@ function Ticker() {
     <div style={{ display: "flex", alignItems: "center", whiteSpace: "nowrap", width: "50%" }}>
       {t.ticker.map((p, i) => (
         <span key={i} style={{ display: "flex", alignItems: "center" }}>
-          <span
-            style={{
-              fontFamily: mono,
-              fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: "0.08em",
-              color: C.ink,
-              padding: "12px 0",
-            }}
-          >
+          <span style={{ fontFamily: mono, fontSize: 13, fontWeight: 600, letterSpacing: "0.08em", color: C.ink, padding: "12px 0" }}>
             {p}
           </span>
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              background: C.ink,
-              transform: "rotate(45deg)",
-              margin: "0 22px",
-              flex: "none",
-            }}
-          />
+          <span style={{ width: 8, height: 8, background: C.ink, transform: "rotate(45deg)", margin: "0 22px", flex: "none" }} />
         </span>
       ))}
     </div>
@@ -411,6 +484,15 @@ function Ticker() {
   );
 }
 
+// ---- section heading helper -------------------------------------------------
+function SecLabel({ n, children }: { n: string; children: ReactNode }) {
+  return (
+    <div style={monoLabel}>
+      [ {n} ] {children}
+    </div>
+  );
+}
+
 // ---- how it works -----------------------------------------------------------
 function How() {
   const { t } = useI18n();
@@ -418,22 +500,27 @@ function How() {
     <div id="how" style={{ borderBottom: `1px solid ${C.rule}` }}>
       <div style={{ ...wrap, padding: "80px 36px" }}>
         <Reveal>
-          <div style={{ marginBottom: 48 }}>
-            <div style={monoLabel}>{t.how.label}</div>
-            <h2
-              style={{
-                margin: "14px 0 0",
-                fontSize: "clamp(32px, 5vw, 46px)",
-                fontWeight: 900,
-                letterSpacing: "-0.04em",
-                lineHeight: 0.95,
-                textTransform: "uppercase",
-              }}
-            >
-              {t.how.titleL1}
-              <br />
-              {t.how.titleL2}
-            </h2>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 20, marginBottom: 46 }}>
+            <div>
+              <SecLabel n="01">{t.how.label}</SecLabel>
+              <h2
+                style={{
+                  margin: "14px 0 0",
+                  fontSize: "clamp(32px, 5vw, 46px)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 0.95,
+                  textTransform: "uppercase",
+                }}
+              >
+                {t.how.titleL1}
+                <br />
+                {t.how.titleL2}
+              </h2>
+            </div>
+            <span style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: "0.12em", color: C.mark }}>
+              {t.marathon.proc}
+            </span>
           </div>
         </Reveal>
         <div
@@ -456,23 +543,11 @@ function How() {
                   height: "100%",
                 }}
               >
-                <div style={{ fontFamily: mono, fontSize: 13, color: C.acc, fontWeight: 500 }}>
-                  {s.n}
-                </div>
-                <div
-                  style={{
-                    fontSize: 19,
-                    fontWeight: 800,
-                    letterSpacing: "-0.02em",
-                    marginTop: 18,
-                    textTransform: "uppercase",
-                  }}
-                >
+                <div style={{ fontFamily: pixel, fontSize: 16, color: C.acc, fontWeight: 700 }}>{s.n}</div>
+                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: "-0.02em", marginTop: 18, textTransform: "uppercase" }}>
                   {s.t}
                 </div>
-                <div style={{ fontSize: 13, lineHeight: 1.55, color: C.faint, marginTop: 10 }}>
-                  {s.d}
-                </div>
+                <div style={{ fontSize: 13, lineHeight: 1.55, color: C.faint, marginTop: 10 }}>{s.d}</div>
               </motion.div>
             </Reveal>
           ))}
@@ -487,12 +562,9 @@ function Method() {
   const { t } = useI18n();
   return (
     <div style={{ borderBottom: `1px solid ${C.rule}`, background: C.panel2 }}>
-      <div
-        className="ms-method"
-        style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 60 }}
-      >
+      <div className="ms-method" style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
-          <div style={monoLabel}>{t.method.label}</div>
+          <SecLabel n="02">{t.method.label}</SecLabel>
           <h2
             style={{
               margin: "16px 0 0",
@@ -514,7 +586,8 @@ function Method() {
           </p>
         </Reveal>
         <Reveal delay={0.12} style={{ flex: "none" }}>
-          <div style={{ display: "flex", border: `1px solid ${C.rule2}` }}>
+          <div style={{ position: "relative", display: "flex", border: `1px solid ${C.rule2}` }}>
+            <Corners />
             <Stat>
               <CountUp to={8} suffix="×" style={statNum(C.acc)} />
               <StatLabel>{t.method.stats[0]}</StatLabel>
@@ -535,30 +608,23 @@ function Method() {
 }
 
 const statNum = (color: string): CSSProperties => ({
-  fontFamily: mono,
-  fontSize: 46,
-  fontWeight: 600,
+  fontFamily: pixel,
+  fontSize: 48,
+  fontWeight: 700,
   color,
-  letterSpacing: "-0.03em",
   lineHeight: 1,
 });
 
 function Stat({ children, last }: { children: ReactNode; last?: boolean }) {
   return (
-    <div
-      style={{
-        padding: "32px 30px",
-        borderRight: last ? "none" : `1px solid ${C.rule2}`,
-        textAlign: "center",
-      }}
-    >
+    <div style={{ padding: "34px 30px", borderRight: last ? "none" : `1px solid ${C.rule2}`, textAlign: "center" }}>
       {children}
     </div>
   );
 }
 function StatLabel({ children }: { children: ReactNode }) {
   return (
-    <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.1em", color: C.faint, marginTop: 12 }}>
+    <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.1em", color: C.faint, marginTop: 14 }}>
       {children}
     </div>
   );
@@ -572,7 +638,7 @@ function Features() {
     <div style={{ borderBottom: `1px solid ${C.rule}` }}>
       <div style={{ ...wrap, padding: "80px 36px" }}>
         <Reveal>
-          <div style={monoLabel}>{f.label}</div>
+          <SecLabel n="03">{f.label}</SecLabel>
           <h2
             style={{
               margin: "14px 0 44px",
@@ -586,14 +652,7 @@ function Features() {
             {f.title}
           </h2>
         </Reveal>
-        <div
-          className="ms-features"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.4fr 1fr 1fr",
-            gridAutoRows: "minmax(220px,auto)",
-          }}
-        >
+        <div className="ms-features" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gridAutoRows: "minmax(220px,auto)" }}>
           <Cell delay={0}>
             <FLabel>{f.panel.l}</FLabel>
             <FTitle>{f.panel.t}</FTitle>
@@ -617,10 +676,7 @@ function Features() {
             <FTitle>{f.notif.t}</FTitle>
             <FDesc>{f.notif.d}</FDesc>
           </Cell>
-          <Cell
-            delay={0.24}
-            style={{ gridColumn: "span 2", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
-          >
+          <Cell delay={0.24} style={{ gridColumn: "span 2", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <div>
               <FLabel>{f.gear.l}</FLabel>
               <FTitle>{f.gear.t}</FTitle>
@@ -636,15 +692,7 @@ function Features() {
   );
 }
 
-function Cell({
-  children,
-  style,
-  delay = 0,
-}: {
-  children: ReactNode;
-  style?: CSSProperties;
-  delay?: number;
-}) {
+function Cell({ children, style, delay = 0 }: { children: ReactNode; style?: CSSProperties; delay?: number }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
@@ -663,6 +711,7 @@ function Cell({
         ...style,
       }}
     >
+      <Corners />
       {children}
     </motion.div>
   );
@@ -672,15 +721,7 @@ const FLabel = ({ children }: { children: ReactNode }) => (
   <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.14em", color: C.acc }}>{children}</div>
 );
 const FTitle = ({ children }: { children: ReactNode }) => (
-  <div
-    style={{
-      fontSize: 21,
-      fontWeight: 800,
-      letterSpacing: "-0.025em",
-      marginTop: 12,
-      textTransform: "uppercase",
-    }}
-  >
+  <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.025em", marginTop: 12, textTransform: "uppercase" }}>
     {children}
   </div>
 );
@@ -691,13 +732,13 @@ const FDesc = ({ children }: { children: ReactNode }) => (
 function MiniPanel() {
   const { t } = useI18n();
   return (
-    <div style={{ marginTop: 20, width: "100%", border: `1px solid ${C.rule2}`, background: "#0c0c0c", padding: "11px 13px" }}>
+    <div style={{ marginTop: 20, width: "100%", border: `1px solid ${C.rule2}`, background: C.panel2, padding: "11px 13px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
           <div style={{ fontSize: 15, fontWeight: 800, textTransform: "uppercase" }}>{t.mock.ex}</div>
           <div style={{ fontFamily: mono, fontSize: 9.5, color: C.faint, marginTop: 2 }}>{t.features.miniMeta}</div>
         </div>
-        <div style={{ fontFamily: mono, fontSize: 15, fontWeight: 600, color: C.ink, background: C.acc, padding: "3px 7px" }}>
+        <div style={{ fontFamily: mono, fontSize: 11, fontWeight: 600, color: C.ink, background: C.acc, padding: "4px 8px" }}>
           {t.features.miniNow}
         </div>
       </div>
@@ -724,15 +765,9 @@ function MiniLadder() {
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              height: 9,
-              transformOrigin: "bottom",
-              background: i < 1 ? "rgba(196,248,42,0.3)" : i === 1 ? C.acc : C.bar0,
-            }}
+            style={{ height: 9, transformOrigin: "bottom", background: i < 1 ? "rgba(196,248,42,0.3)" : i === 1 ? C.acc : C.bar0 }}
           />
-          <div style={{ fontFamily: mono, fontSize: 9, color: i === 1 ? C.acc : C.faint2, marginTop: 7, textAlign: "center" }}>
-            {lv}
-          </div>
+          <div style={{ fontFamily: mono, fontSize: 9, color: i === 1 ? C.acc : C.faint2, marginTop: 7, textAlign: "center" }}>{lv}</div>
         </div>
       ))}
     </div>
@@ -768,14 +803,7 @@ function MiniChips() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: i * 0.07 }}
-          style={{
-            fontFamily: mono,
-            fontSize: 10,
-            letterSpacing: "0.04em",
-            color: C.dim,
-            border: `1px solid ${C.rule2}`,
-            padding: "6px 10px",
-          }}
+          style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.04em", color: C.dim, border: `1px solid ${C.rule2}`, padding: "6px 10px" }}
         >
           {c}
         </motion.span>
@@ -802,12 +830,9 @@ function OpenSource() {
 
   return (
     <div id="oss" style={{ borderBottom: `1px solid ${C.rule}`, background: C.panel2 }}>
-      <div
-        className="ms-oss"
-        style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 56 }}
-      >
+      <div className="ms-oss" style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 56 }}>
         <Reveal style={{ flex: 1 }}>
-          <div style={monoLabel}>{t.oss.label}</div>
+          <SecLabel n="04">{t.oss.label}</SecLabel>
           <h2
             style={{
               margin: "16px 0 0",
@@ -849,48 +874,22 @@ function OpenSource() {
         </Reveal>
 
         <Reveal delay={0.12} className="ms-oss-card" style={{ flex: "none", width: 420 }}>
-          <div style={{ border: `1px solid ${C.rule2}`, background: C.ink }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "16px 18px",
-                borderBottom: `1px solid ${C.rule2}`,
-              }}
-            >
+          <div style={{ position: "relative", border: `1px solid ${C.rule2}`, background: C.ink }}>
+            <Corners />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", borderBottom: `1px solid ${C.rule2}` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                 <IconGithub size={17} fill={C.dim} />
                 <span style={{ fontFamily: mono, fontSize: 13, color: C.paper }}>
                   eriklueh<span style={{ color: C.faint2 }}>/</span>microset
                 </span>
               </div>
-              <span
-                style={{
-                  fontFamily: mono,
-                  fontSize: 9.5,
-                  letterSpacing: "0.06em",
-                  color: C.dim,
-                  border: `1px solid ${C.rule2}`,
-                  padding: "3px 7px",
-                }}
-              >
+              <span style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: "0.06em", color: C.dim, border: `1px solid ${C.rule2}`, padding: "3px 7px" }}>
                 {t.oss.public}
               </span>
             </div>
             <div style={{ padding: "16px 18px" }}>
               <div style={{ fontSize: 13, lineHeight: 1.5, color: C.dim }}>{t.oss.cardDesc}</div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 18,
-                  marginTop: 16,
-                  fontFamily: mono,
-                  fontSize: 11,
-                  color: C.faint,
-                }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 16, fontFamily: mono, fontSize: 11, color: C.faint }}>
                 <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ width: 9, height: 9, borderRadius: "50%", background: C.acc }} />
                   Rust
@@ -959,23 +958,20 @@ function OpenSource() {
 function OssStat({ value, label }: { value: string; label: string }) {
   return (
     <div>
-      <div style={{ fontFamily: mono, fontSize: 26, fontWeight: 600, color: C.paper }}>{value}</div>
-      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.08em", color: C.faint, marginTop: 5 }}>
-        {label}
-      </div>
+      <div style={{ fontFamily: pixel, fontSize: 30, fontWeight: 700, color: C.paper }}>{value}</div>
+      <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.08em", color: C.faint, marginTop: 5 }}>{label}</div>
     </div>
   );
 }
 
 // ---- brand (lime invert) ----------------------------------------------------
 function Brand() {
-  const { t } = useI18n();
   return (
     <div style={{ background: C.acc, borderBottom: `1px solid ${C.rule}` }}>
       <div
         style={{
           ...wrap,
-          padding: "64px 36px",
+          padding: "60px 36px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -983,37 +979,15 @@ function Brand() {
           flexWrap: "wrap",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <span
-            style={{
-              fontSize: "clamp(44px, 8vw, 74px)",
-              fontWeight: 900,
-              letterSpacing: "-0.06em",
-              color: C.ink,
-              lineHeight: 0.9,
-            }}
-          >
-            microset
-          </span>
-          <span style={{ display: "inline-block", width: 22, height: 58, background: C.ink, marginLeft: 12 }} />
+        <div style={{ fontFamily: pixel, fontSize: "clamp(54px, 9vw, 104px)", fontWeight: 700, letterSpacing: "0.01em", color: C.ink, lineHeight: 0.85 }}>
+          MICROSET
         </div>
-        <div
-          style={{
-            fontFamily: mono,
-            fontSize: 11,
-            letterSpacing: "0.14em",
-            color: C.ink,
-            textAlign: "right",
-            lineHeight: 1.9,
-            opacity: 0.7,
-          }}
-        >
-          {t.brand.map((l) => (
-            <span key={l}>
-              {l}
-              <br />
-            </span>
-          ))}
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: "0.14em", color: C.ink, textAlign: "right", lineHeight: 1.9, opacity: 0.72 }}>
+          OPEN SOURCE
+          <br />
+          MIT · TAURI · RUST
+          <br />
+          WINDOWS · LINUX
         </div>
       </div>
     </div>
@@ -1033,19 +1007,21 @@ function FinalCTA() {
           transform: "translateX(-50%)",
           width: "80%",
           height: "120%",
-          background: "radial-gradient(ellipse at 50% 100%,rgba(196,248,42,0.12),transparent 62%)",
+          background: "radial-gradient(ellipse at 50% 100%,rgba(196,248,42,0.1),transparent 62%)",
           pointerEvents: "none",
         }}
       />
-      <div style={{ ...wrap, position: "relative", padding: "96px 36px", textAlign: "center" }}>
+      <span style={{ position: "absolute", top: 80, left: 120, color: C.rule2, fontSize: 20, fontWeight: 300, pointerEvents: "none" }}>+</span>
+      <span style={{ position: "absolute", top: 140, right: 160, color: C.rule2, fontSize: 20, fontWeight: 300, pointerEvents: "none" }}>+</span>
+      <div style={{ ...wrap, position: "relative", padding: "92px 36px", textAlign: "center" }}>
         <Reveal>
-          <div style={{ display: "inline-flex", marginBottom: 24 }}>
-            <Mark size={40} font={28} />
+          <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.2em", color: C.acc, marginBottom: 22 }}>
+            [ 05 ] {t.marathon.session}
           </div>
           <h2
             style={{
               margin: 0,
-              fontSize: "clamp(40px, 7vw, 64px)",
+              fontSize: "clamp(40px, 7vw, 62px)",
               fontWeight: 900,
               letterSpacing: "-0.05em",
               lineHeight: 0.9,
@@ -1056,9 +1032,7 @@ function FinalCTA() {
             <br />
             {t.cta.titleL2}
           </h2>
-          <p style={{ margin: "22px auto 0", maxWidth: 420, fontSize: 16, lineHeight: 1.6, color: C.dim }}>
-            {t.cta.body}
-          </p>
+          <p style={{ margin: "22px auto 0", maxWidth: 420, fontSize: 16, lineHeight: 1.6, color: C.dim }}>{t.cta.body}</p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginTop: 34, flexWrap: "wrap" }}>
             <DownloadBtn big />
             <motion.a

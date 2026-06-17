@@ -11,7 +11,7 @@ html {
 html,
 body {
   margin: 0;
-  background: #0a0a0a;
+  background: #000;
 }
 
 body {
@@ -96,6 +96,16 @@ a {
     width: 100% !important;
     max-width: 460px;
   }
+  .ms-hero-right {
+    width: 100% !important;
+    margin-top: 28px;
+  }
+  .ms-hero-pad {
+    padding-right: 36px !important;
+  }
+  .ms-relay {
+    display: none !important;
+  }
   .ms-steps {
     grid-template-columns: repeat(2, 1fr) !important;
   }
@@ -115,6 +125,9 @@ a {
 }
 @media (max-width: 520px) {
   .ms-nav-star {
+    display: none !important;
+  }
+  .ms-sys-extra {
     display: none !important;
   }
 }

@@ -1,23 +1,27 @@
 /** Site-wide constants: brand tokens (mirrors the app's Manifiesto palette) + links. */
 
-/** Manifiesto palette — kept in sync with the desktop app's dark theme. */
+/** "Marathon" palette — Manifiesto intensified: pure black + lime + HUD greys. */
 export const C = {
   acc: "#c4f82a", // lime accent
-  ink: "#0a0a0a", // near-black ink / page bg
+  ink: "#000000", // pure black page bg (Marathon)
   paper: "#ededea", // off-white text
   text: "#cfcfca", // body text
   dim: "#b4b4ad", // muted text (lightened for AA contrast)
   faint: "#8f8f86", // captions (lightened for AA contrast)
   faint2: "#6e6e66", // faintest decorative / least-important text
-  rule: "#1f1f1c", // section hairlines
-  rule2: "#2a2a27", // component borders
-  panel2: "#0d0d0c", // alternating section bg
-  bar0: "#1c1c1a", // empty progress track
+  rule: "#1f1f1a", // section hairlines
+  rule2: "#2a2a22", // component borders
+  panel2: "#070705", // alternating section bg
+  bar0: "#16160f", // empty progress track
+  grid: "#141410", // background micro-text grid
+  mark: "#242420", // registration marks / faint chrome
 } as const;
 
 export const sans =
   "'Geist Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif";
 export const mono = "'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace";
+/** Pixel display font — DISPLAY ONLY (wordmark, hero highlight, big numerals). */
+export const pixel = "'Pixelify Sans', ui-monospace, monospace";
 
 /** Repos + install endpoints. */
 export const REPO_URL = "https://github.com/eriklueh/microset";

@@ -1,8 +1,8 @@
 /** The "Hoy"/"Today" app screenshot mock shown in the hero, ported from the design. */
 import { motion, useReducedMotion } from "framer-motion";
-import { IconCheck } from "../lib/bits";
+import { Corners, IconCheck } from "../lib/bits";
 import { useI18n } from "../lib/i18n";
-import { C, mono } from "../lib/site";
+import { C, mono, pixel } from "../lib/site";
 
 const ROWS = [
   { idx: "01", t: "09:00", st: "done" },
@@ -24,11 +24,13 @@ export function HeroMock() {
     >
       <div
         style={{
+          position: "relative",
           border: `1px solid ${C.rule2}`,
           background: C.ink,
           boxShadow: "0 50px 100px -30px rgba(0,0,0,0.8)",
         }}
       >
+        <Corners />
         {/* title bar */}
         <div
           style={{
@@ -60,15 +62,7 @@ export function HeroMock() {
             >
               {t.mock.hoy}
             </div>
-            <div
-              style={{
-                fontFamily: mono,
-                fontSize: 24,
-                fontWeight: 600,
-                color: C.paper,
-                letterSpacing: "-0.02em",
-              }}
-            >
+            <div style={{ fontFamily: pixel, fontSize: 26, fontWeight: 700, color: C.paper }}>
               03<span style={{ color: C.faint2 }}>/08</span>
             </div>
           </div>
