@@ -20,8 +20,8 @@ export const C = {
 export const sans =
   "'Geist Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif";
 export const mono = "'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace";
-/** Pixel display font — DISPLAY ONLY (wordmark, hero highlight, big numerals). */
-export const pixel = "'Pixelify Sans', ui-monospace, monospace";
+/** Pixel display font — DISPLAY ONLY (wordmark, hero highlight, big numerals). Mirrors the app. */
+export const pixel = "'Geist Pixel', ui-monospace, monospace";
 
 /** Repos + install endpoints. */
 export const REPO_URL = "https://github.com/eriklueh/microset";

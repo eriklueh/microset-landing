@@ -35,6 +35,16 @@ a {
   color: #0a0a0a;
 }
 
+/* Geist Pixel (Square) — the Marathon brand/numeral face (mirrors the app).
+   Single weight; the 400–700 range stops the browser from faux-bolding it. */
+@font-face {
+  font-family: "Geist Pixel";
+  src: url("./assets/fonts/GeistPixel-Square.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ---- design animations ---- */
 @keyframes msMarq {
   0% {

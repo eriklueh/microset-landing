@@ -44,6 +44,7 @@ export default function App() {
       <How />
       <Method />
       <Features />
+      <Coach />
       <OpenSource />
       <Brand />
       <FinalCTA />
@@ -630,6 +631,59 @@ function StatLabel({ children }: { children: ReactNode }) {
   );
 }
 
+// ---- coach (AI) -------------------------------------------------------------
+function Coach() {
+  const { t } = useI18n();
+  return (
+    <div style={{ borderBottom: `1px solid ${C.rule}` }}>
+      <div className="ms-method" style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 60 }}>
+        <Reveal style={{ flex: 1 }}>
+          <SecLabel n="04">{t.coach.label}</SecLabel>
+          <h2
+            style={{
+              margin: "16px 0 0",
+              fontSize: "clamp(34px, 5.5vw, 52px)",
+              fontWeight: 900,
+              letterSpacing: "-0.045em",
+              lineHeight: 0.92,
+              textTransform: "uppercase",
+            }}
+          >
+            {t.coach.titleL1}
+            <br />
+            {t.coach.titleL2}
+            <br />
+            {t.coach.titleL3}
+          </h2>
+          <p style={{ margin: "22px 0 0", maxWidth: 440, fontSize: 15, lineHeight: 1.65, color: C.dim }}>
+            {t.coach.body}
+          </p>
+        </Reveal>
+        <Reveal delay={0.12} style={{ flex: "none" }}>
+          <div style={{ position: "relative", width: 300, border: `1px solid ${C.rule2}`, padding: 24 }}>
+            <Corners />
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.16em", color: C.acc }}>{t.coach.modesLabel}</div>
+            <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 11 }}>
+              {t.coach.modes.map((m) => (
+                <div
+                  key={m}
+                  style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: mono, fontSize: 12.5, letterSpacing: "0.04em", color: C.text }}
+                >
+                  <span style={{ color: C.acc }}>›</span>
+                  {m}
+                </div>
+              ))}
+            </div>
+            <div style={{ height: 1, background: C.rule, margin: "18px 0" }} />
+            <div style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: "0.14em", color: C.faint }}>{t.coach.reviewLabel}</div>
+            <div style={{ marginTop: 6, fontSize: 13.5, lineHeight: 1.5, color: C.paper }}>{t.coach.review}</div>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  );
+}
+
 // ---- features (bento) -------------------------------------------------------
 function Features() {
   const { t } = useI18n();
@@ -832,7 +886,7 @@ function OpenSource() {
     <div id="oss" style={{ borderBottom: `1px solid ${C.rule}`, background: C.panel2 }}>
       <div className="ms-oss" style={{ ...wrap, padding: "80px 36px", display: "flex", alignItems: "center", gap: 56 }}>
         <Reveal style={{ flex: 1 }}>
-          <SecLabel n="04">{t.oss.label}</SecLabel>
+          <SecLabel n="05">{t.oss.label}</SecLabel>
           <h2
             style={{
               margin: "16px 0 0",
