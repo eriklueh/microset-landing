@@ -7,7 +7,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { C, mono, REPO_URL } from "./site";
+import { C, mono, REPO_URL, DOWNLOAD_WIN, DOWNLOAD_LINUX, RELEASES_URL } from "./site";
 
 // ---- Marathon HUD chrome -----------------------------------------------------
 /** Lime corner brackets framing a card/mock. */
@@ -174,6 +174,13 @@ export function useOS(): OS {
   const [os, setOS] = useState<OS>("other");
   useEffect(() => setOS(detectOS()), []);
   return os;
+}
+/** Pick the right stable installer URL for the detected OS. Mac/other → the releases page,
+ *  where every platform's bundle is listed (we ship Windows + Linux). */
+export function downloadFor(os: OS): string {
+  if (os === "windows") return DOWNLOAD_WIN;
+  if (os === "linux") return DOWNLOAD_LINUX;
+  return RELEASES_URL;
 }
 
 // ---- icons (from the design) -------------------------------------------------

@@ -27,7 +27,11 @@ export const pixel = "'Geist Pixel', ui-monospace, monospace";
 export const REPO_URL = "https://github.com/eriklueh/microset";
 export const LANDING_REPO_URL = "https://github.com/eriklueh/microset-landing";
 export const RELEASES_URL = `${REPO_URL}/releases/latest`;
-/** Stable-named asset uploaded to every release, so this link survives version bumps. */
-export const DOWNLOAD_URL = `${REPO_URL}/releases/latest/download/microset-setup-x64.exe`;
+/** Stable-named assets uploaded to every release, so these links survive version bumps.
+ *  The release pipeline re-uploads the per-version bundles under these fixed names. */
+export const DOWNLOAD_WIN = `${REPO_URL}/releases/latest/download/microset-setup-x64.exe`;
+export const DOWNLOAD_LINUX = `${REPO_URL}/releases/latest/download/microset-x64.AppImage`;
+/** Default download (Windows) for static links that don't detect the OS. */
+export const DOWNLOAD_URL = DOWNLOAD_WIN;
 export const CLONE_CMD = "git clone https://github.com/eriklueh/microset";
 export const INSTALLER_SIZE = "~3 MB";

@@ -13,12 +13,15 @@ import {
   Reveal,
   useGithubStats,
   useOS,
+  downloadFor,
 } from "./lib/bits";
 import { useI18n, LangToggle } from "./lib/i18n";
 import {
   C,
   CLONE_CMD,
   DOWNLOAD_URL,
+  DOWNLOAD_WIN,
+  DOWNLOAD_LINUX,
   INSTALLER_SIZE,
   mono,
   pixel,
@@ -89,10 +92,11 @@ function SystemBar() {
 function DownloadBtn({ big = false }: { big?: boolean }) {
   const { t } = useI18n();
   const os = useOS();
-  const label = os === "windows" ? t.hero.downloadWin : t.hero.downloadFree;
+  const label =
+    os === "windows" ? t.hero.downloadWin : os === "linux" ? t.hero.downloadLinux : t.hero.downloadFree;
   return (
     <motion.a
-      href={DOWNLOAD_URL}
+      href={downloadFor(os)}
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.97 }}
       style={{
@@ -147,6 +151,7 @@ function Nav() {
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const stats = useGithubStats();
+  const os = useOS();
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 8);
     on();
@@ -207,7 +212,7 @@ function Nav() {
           </motion.a>
           <LangToggle />
           <motion.a
-            href={DOWNLOAD_URL}
+            href={downloadFor(os)}
             whileHover={{ y: -1 }}
             whileTap={{ scale: 0.96 }}
             style={{
@@ -372,7 +377,13 @@ function Hero() {
                 }}
               >
                 <span style={{ color: C.acc }}>↓</span>
-                <span>{t.marathon.linuxNote}</span>
+                <a href={DOWNLOAD_WIN} style={{ color: C.paper, textDecoration: "none", borderBottom: `1px solid ${C.rule2}` }}>
+                  WINDOWS · EXE
+                </a>
+                <Dot />
+                <a href={DOWNLOAD_LINUX} style={{ color: C.paper, textDecoration: "none", borderBottom: `1px solid ${C.rule2}` }}>
+                  LINUX · APPIMAGE
+                </a>
                 <Dot />
                 <span>{INSTALLER_SIZE}</span>
                 <Dot />

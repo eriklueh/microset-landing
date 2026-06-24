@@ -21,12 +21,13 @@ export const STRINGS = {
       lead: "microset no es otro recordatorio de estirar: arma una rutina real con tu equipo y la reparte en micro-pausas a lo largo de tu jornada de home office. Te avisa, te movés un minuto, seguís.",
       leadAccent: "Open source, nativo, sin nube.",
       downloadWin: "DESCARGAR PARA WINDOWS",
+      downloadLinux: "DESCARGAR PARA LINUX",
       downloadFree: "DESCARGAR GRATIS",
       github: "VER EN GITHUB",
       smartscreen:
         "Sin firmar todavía: si Windows muestra un aviso, tocá Más info → Ejecutar de todos modos.",
     },
-    platform: ["WINDOWS 11", "LINUX PRONTO", "TAURI · RUST", "MIT"],
+    platform: ["WINDOWS 11", "LINUX · APPIMAGE", "TAURI · RUST", "MIT"],
     ticker: [
       "MICRO-PAUSAS DE MOVIMIENTO",
       "8 PAUSAS AL DÍA",
@@ -155,12 +156,13 @@ export const STRINGS = {
       lead: "microset isn't another stretch reminder: it builds a real routine from your gear and spreads it into micro-breaks across your work-from-home day. It nudges you, you move for a minute, you carry on.",
       leadAccent: "Open source, native, no cloud.",
       downloadWin: "DOWNLOAD FOR WINDOWS",
+      downloadLinux: "DOWNLOAD FOR LINUX",
       downloadFree: "DOWNLOAD FREE",
       github: "VIEW ON GITHUB",
       smartscreen:
         "Not signed yet: if Windows shows a warning, click More info → Run anyway.",
     },
-    platform: ["WINDOWS 11", "LINUX SOON", "TAURI · RUST", "MIT"],
+    platform: ["WINDOWS 11", "LINUX · APPIMAGE", "TAURI · RUST", "MIT"],
     ticker: [
       "MOVEMENT MICRO-BREAKS",
       "8 BREAKS A DAY",
